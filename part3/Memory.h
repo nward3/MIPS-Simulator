@@ -8,7 +8,7 @@
 #ifndef NDSIM_MEMORY_H_
 #define NDSIM_MEMORY_H_
 
-#include "Cache.h"
+#include "associativeCache.h"
 #include "global.h"
 
 class Memory {
@@ -29,8 +29,8 @@ class Memory {
   unsigned  stackBound;
   unsigned  stackBase;
   uint32_t  mainAddr;
-  Cache*    iCache;
-  Cache*    dCache;
+  associativeCache*    iCache;
+  associativeCache*    dCache;
 public:
   Memory(unsigned tSize = (1<<20),
          unsigned dSize = (1<<20),
@@ -53,8 +53,10 @@ public:
 
   void      initCache(unsigned iLogDepth,
                       unsigned iLogBlksize,
+                      unsigned iAssociativity,
                       unsigned dLogDepth,
-                      unsigned dLogBlksize);
+                      unsigned dLogBlksize,
+                      unsigned dAssociativity);
 
   unsigned  getIcacheAccesses() { return iCache->getAccesses(); }
   unsigned  getIcacheHits()     { return iCache->getHits(); }

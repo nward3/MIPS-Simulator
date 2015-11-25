@@ -308,10 +308,12 @@ void Memory::readElfFile(char *filename) {
 void Memory::initCache(
     unsigned iLogDepth,
     unsigned iLogBlksize,
+    unsigned iAssociativity,
     unsigned dLogDepth,
-    unsigned dLogBlksize) {
-  iCache = new Cache(iLogBlksize, iLogDepth);
-  dCache = new Cache(dLogBlksize, dLogDepth);
+    unsigned dLogBlksize,
+    unsigned dAssociativity) {
+  iCache = new associativeCache(iLogBlksize, iLogDepth, iAssociativity);
+  dCache = new associativeCache(dLogBlksize, dLogDepth, dAssociativity);
 }
 
 void Memory::printStats() {

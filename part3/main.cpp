@@ -13,7 +13,7 @@
 
 void instructionExecTest()
 {
-  M.initCache(0, 4, 0, 4);
+  M.initCache(0, 4, 3, 0, 4, 3);
   M.write32(0x3210dcba, 0x10010000);
   pc = 0x00400000;
   // basic ALU tests
@@ -132,7 +132,7 @@ void instructionExecTest()
 }
 
 void testCache() {
-  Cache cache(2,3);
+  associativeCache cache(2,3,3);
   TESTEQ(cache.checkHit(0x00000001), false);
   TESTEQ(cache.checkHit(0x00000001), true);
   TESTEQ(cache.checkHit(0x00000011), false);
@@ -228,8 +228,10 @@ int main(int argc, char **argv)
       {"logfile",         no_argument,        0,   'l'},
       {"Id",              required_argument,  0,   'A'},
       {"Ib",              required_argument,  0,   'B'},
-      {"Dd",              required_argument,  0,   'C'},
-      {"Db",              required_argument,  0,   'D'},
+      {"Ia",              required_argument,  0,   'C'},
+      {"Dd",              required_argument,  0,   'D'},
+      {"Db",              required_argument,  0,   'E'},
+      {"Da",              required_argument,  0,   'F'},
       {0, 0, 0, 0}
   };
   int longindex;
@@ -242,8 +244,10 @@ int main(int argc, char **argv)
   bool qtSpimLogMode = false;
   unsigned iCacheLogDepth     = 6;
   unsigned iCacheLogBlksize   = 2;
+  unsigned iAssociativity     = 3;
   unsigned dCacheLogDepth     = 6;
   unsigned dCacheLogBlksize   = 2;
+  unsigned dAssociativity     = 3;
 
   while ((opt = getopt_long_only(argc, argv, "", longopts, &longindex)) != -1) {
     switch (opt) {
@@ -273,11 +277,17 @@ int main(int argc, char **argv)
     case 'B':   // Ib
       iCacheLogBlksize = atoi(optarg);
       break;
-    case 'C':   // Dd
+    case 'C':   // Ia
+      iAssociativity = atoi(optarg);
+      break;
+    case 'D':   // Dd
       dCacheLogDepth = atoi(optarg);
       break;
-    case 'D':   // Db
+    case 'E':   // Db
       dCacheLogBlksize = atoi(optarg);
+      break;
+    case 'F':   // Da
+      dAssociativity = atoi(optarg);
       break;
     default :
       printf("usage error\n");
@@ -288,7 +298,7 @@ int main(int argc, char **argv)
   assert(argc > 1 && "need to specify input file");
   char* infile = argv[optind];
 
-  M.initCache(iCacheLogDepth, iCacheLogBlksize, dCacheLogDepth, dCacheLogBlksize);
+  M.initCache(iCacheLogDepth, iCacheLogBlksize, iAssociativity, dCacheLogDepth, dCacheLogBlksize, dAssociativity);
 
   if (qtSpimLogMode)
     M.readSpimLogFile(infile);

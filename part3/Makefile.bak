@@ -1,4 +1,4 @@
-SRCS = main.cpp Memory.cpp RegFile.cpp Instruction.cpp global.cpp Cache.cpp
+SRCS = main.cpp Memory.cpp RegFile.cpp Instruction.cpp global.cpp associativeCache.cpp
 
 CPP = g++
 CFLAGS = 
@@ -26,9 +26,9 @@ depend:
 
 # DO NOT DELETE
 
-main.o: global.h Memory.h Cache.h RegFile.h Instruction.h
-Memory.o: Memory.h Cache.h global.h RegFile.h elf.h
+main.o: global.h Memory.h associativeCache.h RegFile.h Instruction.h
+Memory.o: Memory.h associativeCache.h global.h RegFile.h elf.h
 RegFile.o: RegFile.h global.h
-Instruction.o: Instruction.h global.h RegFile.h Memory.h Cache.h
-global.o: global.h RegFile.h Memory.h Cache.h
-Cache.o: Cache.h global.h
+Instruction.o: Instruction.h global.h RegFile.h Memory.h associativeCache.h
+global.o: global.h RegFile.h Memory.h associativeCache.h
+Cache.o: associativeCache.h global.h
